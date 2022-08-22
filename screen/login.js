@@ -12,8 +12,8 @@ import {
 } from "react-native";
 
 const Login = ({ navigation }) => {
-  const act_email = "abc";
-  const act_password = "abc";
+  const act_email = "Abc";
+  const act_password = "Abc";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 

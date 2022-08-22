@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { View, Button, Text, Image } from "react-native";
 import { Camera } from "expo-camera";
+import * as ScreenOrientation from "expo-screen-orientation";
+// import * as FaceDetector from "expo-face-detector";
 // import { Video } from "expo-av";
 
 const CameraScreen = ({ navigation }) => {
@@ -14,6 +16,17 @@ const CameraScreen = ({ navigation }) => {
   // const [status, setStatus] = useState({});
 
   const [takeVideoTitle, setTakeVideoTitle] = useState("Take Video");
+  const [orientationIsLandscape, setOrientation] = useState(false);
+
+  async function changeScreenOrientation() {
+    if (orientationIsLandscape == true) {
+      ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.LANDSCAPE_LEFT
+      );
+    } else if (orientationIsLandscape == false) {
+      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
+    }
+  }
 
   useEffect(() => {
     (async () => {
@@ -31,22 +44,25 @@ const CameraScreen = ({ navigation }) => {
       const data = await camera.recordAsync({
         maxDuration: 10,
       });
-      setRecord(data.uri);
+      setRecord(data);
       setIsVideo(true);
-      console.log(data.uri);
     }
     setTakeVideoTitle("Take Video");
   };
 
-  const stopVideo = async () => {
-    setTakeVideoTitle("Take Video");
-    camera.stopRecording();
+  const toggleVideo = () => {
+    console.log("toggled" + orientationIsLandscape);
+    setOrientation(!orientationIsLandscape);
+    changeScreenOrientation();
+    /* setTakeVideoTitle("Take Video");
+    camera.stopRecording(); */
   };
 
   const callnav = () => {
     navigation.navigate("Prediction", {
       singleFile: record,
     });
+    // console.log(record);
   };
 
   if (cameraPermission === null || audioPermission === null) {
@@ -69,7 +85,14 @@ const CameraScreen = ({ navigation }) => {
             flex: 1,
           }}
           type={type}
-          ratio={"4:3"}
+          ratio={"15:10"}
+          /* faceDetectorSettings={{
+            mode: FaceDetector.FaceDetectorMode.fast,
+            detectLandmarks: FaceDetector.FaceDetectorLandmarks.none,
+            runClassifications: FaceDetector.FaceDetectorClassifications.none,
+            minDetectionInterval: 5,
+            tracking: true,
+          }} */
         />
       </View>
       <Button
@@ -77,14 +100,18 @@ const CameraScreen = ({ navigation }) => {
         color="green"
         onPress={() => {
           setType(
-            type === camera.Constants.Type.back
+            type === Camera.Constants.Type.back
               ? Camera.Constants.Type.front
               : Camera.Constants.Type.back
           );
         }}
       />
       <Button title={takeVideoTitle} onPress={() => takeVideo()} />
-      <Button title="Stop Video" color="red" onPress={() => stopVideo()} />
+      <Button
+        title="toggle Orientation"
+        color="red"
+        onPress={() => toggleVideo()}
+      />
       <Button
         onPress={() => {
           isVideo ? callnav() : null;

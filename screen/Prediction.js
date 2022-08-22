@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { View, Button, Text } from "react-native";
 
 const Prediction = ({ route }) => {
-  const singleFile = route.params;
+  const { singleFile } = route.params;
   // const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState(null);
   /* const [posts, setPosts] = useState([]);
   useEffect(() => {
-    const url = "http://10.0.2.2:5000/get"; //api url
+    // const url = "http://10.0.2.2:5000/get"; //api url
+    const url = "http://192.168.43.37:8080/get";
     fetch(url, { method: "GET" })
       .then((resp) => resp.json()) //calling url by method GET
       .then((resp) => setPosts(resp)) //setting response to state posts
@@ -15,32 +16,35 @@ const Prediction = ({ route }) => {
   }, []); */
 
   const sendVideo = async () => {
-    try {
-      // if (singleFile != null) {
-      console.log("in sendVideo");
-      //If file selected then create FormData
-      const fileToUpload = singleFile;
-      const data1 = new FormData();
-      data1.append("file", fileToUpload);
-      console.log("set formdata");
-      let response = await fetch("http://127.0.0.1:5000/upload", {
-        method: "POST",
-        body: data1,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      const json = await response.json();
-      setData(json.heartrate);
-      // }
-    } catch (error) {
+    /* try { */
+    // if (singleFile != null) {
+    // console.log(singleFile);
+    const fileToUpload = singleFile;
+    const data1 = new FormData();
+    data1.append("file", {
+      name: "something.mp4",
+      uri: fileToUpload.uri,
+      type: "video/mp4",
+    });
+    let response = await fetch("http://192.168.43.37:8080/upload", {
+      method: "post",
+      body: data1,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    const json1 = await response.json();
+    console.log(json1);
+    setData(json1.heartrate); /* finally {
+    // }
+    /* } catch (error) {
       console.error(error);
-    } /* finally {
-     setLoading(false);
+    } */
+    /* setLoading(false);
    } */
   };
   useEffect(() => {
-    sendVideo;
+    sendVideo();
   }, []);
 
   return (
@@ -53,7 +57,7 @@ const Prediction = ({ route }) => {
       }}
     >
       <Text>Prediction View</Text>
-      <Text>{data}</Text>
+      {/* <Text>{data}</Text> */}
 
       {/* <View>
         {posts.map((post) => (
