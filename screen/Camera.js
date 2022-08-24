@@ -75,17 +75,17 @@ const CameraScreen = ({ navigation }) => {
     <View style={{ flex: 1, backgroundColor: "lightgrey" }}>
       <View
         style={{
-          flex: 1,
+          flex: 3,
           flexDirection: "row",
         }}
       >
         <Camera
           ref={(ref) => setCamera(ref)}
           style={{
-            flex: 1,
+            flex: 2,
           }}
           type={type}
-          ratio={"15:10"}
+          ratio={"4:3"}
           /* faceDetectorSettings={{
             mode: FaceDetector.FaceDetectorMode.fast,
             detectLandmarks: FaceDetector.FaceDetectorLandmarks.none,
@@ -95,33 +95,39 @@ const CameraScreen = ({ navigation }) => {
           }} */
         />
       </View>
-      <Button
-        title="Flip Video"
-        color="green"
-        onPress={() => {
-          setType(
-            type === Camera.Constants.Type.back
-              ? Camera.Constants.Type.front
-              : Camera.Constants.Type.back
-          );
-        }}
-      />
-      <Button title={takeVideoTitle} onPress={() => takeVideo()} />
-      <Button
-        title="toggle Orientation"
-        color="red"
-        onPress={() => toggleVideo()}
-      />
-      <Button
-        onPress={() => {
-          isVideo ? callnav() : null;
-        }}
-        title="continue"
+      <View
         style={{
-          margin: 10,
-          padding: 1,
+          flex: 1,
         }}
-      />
+      >
+        <Button
+          title="Flip Video"
+          color="green"
+          onPress={() => {
+            setType(
+              type === Camera.Constants.Type.back
+                ? Camera.Constants.Type.front
+                : Camera.Constants.Type.back
+            );
+          }}
+        />
+        <Button title={takeVideoTitle} onPress={() => takeVideo()} />
+        <Button
+          title="toggle Orientation"
+          color="red"
+          onPress={() => toggleVideo()}
+        />
+        <Button
+          onPress={() => {
+            isVideo ? callnav() : null;
+          }}
+          title="continue"
+          style={{
+            margin: 10,
+            padding: 1,
+          }}
+        />
+      </View>
 
       {/* <Video
           ref={video}

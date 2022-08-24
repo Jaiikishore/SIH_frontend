@@ -4,7 +4,9 @@ import { View, Button, Text } from "react-native";
 const Prediction = ({ route }) => {
   const { singleFile } = route.params;
   // const [isLoading, setLoading] = useState(true);
-  const [data, setData] = useState(null);
+  const [heartdata, setHeartData] = useState(null);
+  const [breathdata, setBreathData] = useState(null);
+
   /* const [posts, setPosts] = useState([]);
   useEffect(() => {
     // const url = "http://10.0.2.2:5000/get"; //api url
@@ -26,7 +28,8 @@ const Prediction = ({ route }) => {
       uri: fileToUpload.uri,
       type: "video/mp4",
     });
-    let response = await fetch("http://192.168.43.37:8080/upload", {
+    // let response = await fetch("http://192.168.43.37:8080/upload", {
+    let response = await fetch("http://192.168.159.37:8080/upload", {
       method: "post",
       body: data1,
       headers: {
@@ -35,7 +38,10 @@ const Prediction = ({ route }) => {
     });
     const json1 = await response.json();
     console.log(json1);
-    setData(json1.heartrate); /* finally {
+    setHeartData(Number(json1.heartrate.toFixed(1)));
+    setBreathData(Number(json1.breathingrate.toFixed(2)));
+
+    /* finally {
     // }
     /* } catch (error) {
       console.error(error);
@@ -46,7 +52,6 @@ const Prediction = ({ route }) => {
   useEffect(() => {
     sendVideo();
   }, []);
-
   return (
     <View
       style={{
@@ -57,7 +62,9 @@ const Prediction = ({ route }) => {
       }}
     >
       <Text>Prediction View</Text>
-      {/* <Text>{data}</Text> */}
+      <Text>HR : {heartdata}</Text>
+
+      <Text>BR : {breathdata}</Text>
 
       {/* <View>
         {posts.map((post) => (
