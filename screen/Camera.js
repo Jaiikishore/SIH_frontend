@@ -11,24 +11,23 @@ const CameraScreen = ({ navigation }) => {
   const [camera, setCamera] = useState(null);
   const [record, setRecord] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.front);
-  const [isVideo, setIsVideo] = useState(false);
+  const [isVideo, setIsVideo] = useState(true);
   // const video = React.useRef(null);
   // const [status, setStatus] = useState({});
 
   const [takeVideoTitle, setTakeVideoTitle] = useState("Take Video");
-  const [orientationIsLandscape, setOrientation] = useState(false);
+  // const [orientationIsLandscape, setOrientation] = useState(false);
 
-  async function changeScreenOrientation() {
-    if (orientationIsLandscape == true) {
-      ScreenOrientation.lockAsync(
-        ScreenOrientation.OrientationLock.LANDSCAPE_LEFT
-      );
-    } else if (orientationIsLandscape == false) {
+  /*   async function changeScreenOrientation() {
+    if (orientationIsLandscape == false) {
+      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+    } else if (orientationIsLandscape == true) {
       ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
     }
-  }
+  } */
 
   useEffect(() => {
+    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
     (async () => {
       const cameraStatus = await Camera.requestCameraPermissionsAsync();
       setCameraPermission(cameraStatus.status === "granted");
@@ -38,32 +37,37 @@ const CameraScreen = ({ navigation }) => {
     })();
   }, []);
 
-  const takeVideo = async () => {
-    setTakeVideoTitle("Taking...");
-    if (camera) {
-      const data = await camera.recordAsync({
-        maxDuration: 10,
-      });
-      setRecord(data);
-      setIsVideo(true);
-    }
-    setTakeVideoTitle("Take Video");
-  };
-
-  const toggleVideo = () => {
-    console.log("toggled" + orientationIsLandscape);
-    setOrientation(!orientationIsLandscape);
-    changeScreenOrientation();
-    /* setTakeVideoTitle("Take Video");
-    camera.stopRecording(); */
-  };
-
   const callnav = () => {
     navigation.navigate("Prediction", {
       singleFile: record,
     });
     // console.log(record);
   };
+
+  const takeVideo = async () => {
+    setTakeVideoTitle("Wait...");
+    if (camera) {
+      const data = await camera.recordAsync({
+        maxDuration: 15,
+      });
+      setRecord(data);
+      setIsVideo(true);
+    }
+    setTakeVideoTitle("Taken");
+    // setOrientation(!orientationIsLandscape);
+    // changeScreenOrientation();
+
+    // isVideo ? callnav() : null;
+  };
+
+  // const toggleVideo = () => {
+  // setOrientation(!orientationIsLandscape);
+  // changeScreenOrientation();
+  // console.log("toggled" + orientationIsLandscape);
+  /* setTakeVideoTitle("Take Video");
+    camera.stopRecording(); */
+  // };
+  // changeScreenOrientation();
 
   if (cameraPermission === null || audioPermission === null) {
     return <View />;
@@ -72,20 +76,24 @@ const CameraScreen = ({ navigation }) => {
     return <Text>No Access to camera</Text>;
   }
   return (
-    <View style={{ flex: 1, backgroundColor: "lightgrey" }}>
+    <View
+      style={{ flex: 1, backgroundColor: "black", flexDirection: "column" }}
+    >
       <View
         style={{
-          flex: 3,
-          flexDirection: "row",
+          flex: 1,
         }}
       >
         <Camera
           ref={(ref) => setCamera(ref)}
           style={{
-            flex: 2,
+            flex: 1,
+            justifyContent: "flex-end",
+            alignContent: "flex-end",
+            marginLeft: 100,
+            marginRight: 160,
           }}
           type={type}
-          ratio={"4:3"}
           /* faceDetectorSettings={{
             mode: FaceDetector.FaceDetectorMode.fast,
             detectLandmarks: FaceDetector.FaceDetectorLandmarks.none,
@@ -97,7 +105,10 @@ const CameraScreen = ({ navigation }) => {
       </View>
       <View
         style={{
-          flex: 1,
+          position: "absolute",
+          marginTop: 140,
+          marginRight: 40,
+          right: 0,
         }}
       >
         <Button
@@ -111,12 +122,14 @@ const CameraScreen = ({ navigation }) => {
             );
           }}
         />
-        <Button title={takeVideoTitle} onPress={() => takeVideo()} />
-        <Button
-          title="toggle Orientation"
+        {/* <Button
+          title="Toggle Video"
           color="red"
-          onPress={() => toggleVideo()}
-        />
+          onPress={() => {
+            toggleVideo();
+          }}
+        />*/}
+        <Button title={takeVideoTitle} onPress={() => takeVideo()} />
         <Button
           onPress={() => {
             isVideo ? callnav() : null;
@@ -128,40 +141,6 @@ const CameraScreen = ({ navigation }) => {
           }}
         />
       </View>
-
-      {/* <Video
-          ref={video}
-          style={{
-            alignSelf: "center",
-            width: 220,
-            height: 220,
-            margin: 10,
-          }}
-          source={{
-            uri: record,
-          }}
-          useNativeControls
-          resizeMode="contain"
-          isLooping
-          onPlaybackStatusUpdate={(status) => setStatus(() => status)}
-        />
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-around",
-            alignItems: "center",
-            margin: 20,
-          }}
-        >
-          <Button
-            title={status.isPlaying ? "Pause" : "Play"}
-            onPress={() =>
-              status.isPlaying
-                ? video.current.pauseAsync()
-                : video.current.playAsync()
-            }
-          />
-        </View> */}
     </View>
   );
 };

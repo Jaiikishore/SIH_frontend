@@ -1,5 +1,5 @@
 // import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,9 +11,11 @@ import {
   Alert,
 } from "react-native";
 
+import * as ScreenOrientation from "expo-screen-orientation";
+
 const Login = ({ navigation }) => {
-  const act_email = "Abc";
-  const act_password = "Abc";
+  const act_email = "";
+  const act_password = "";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -36,6 +38,10 @@ const Login = ({ navigation }) => {
       );
     }
   };
+
+  useEffect(() => {
+    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
+  }, []);
 
   return (
     <View style={styles.container}>

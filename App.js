@@ -200,11 +200,26 @@ const App = () => {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{ title: "Home" }}
+          options={{
+            title: "Home",
+            headerShown: false,
+          }}
         />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Camera" component={Camera} />
-        <Stack.Screen name="Prediction" component={Prediction} />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Camera"
+          component={Camera}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Prediction"
+          component={Prediction}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
