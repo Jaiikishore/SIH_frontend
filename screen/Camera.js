@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Button, Text, Image } from "react-native";
+import { View, Button, Text, Image, Alert } from "react-native";
 import { Camera } from "expo-camera";
 import * as ScreenOrientation from "expo-screen-orientation";
 // import * as FaceDetector from "expo-face-detector";
@@ -11,7 +11,7 @@ const CameraScreen = ({ navigation }) => {
   const [camera, setCamera] = useState(null);
   const [record, setRecord] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.front);
-  const [isVideo, setIsVideo] = useState(true);
+  const [isVideo, setIsVideo] = useState(false);
   // const video = React.useRef(null);
   // const [status, setStatus] = useState({});
 
@@ -25,6 +25,10 @@ const CameraScreen = ({ navigation }) => {
       ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
     }
   } */
+
+  const showAlert = () => {
+    Alert.alert("VIDEO NOT TAKEN", "Press 'OK' to proceed", [{ text: "OK" }]);
+  };
 
   useEffect(() => {
     ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
@@ -132,7 +136,7 @@ const CameraScreen = ({ navigation }) => {
         <Button title={takeVideoTitle} onPress={() => takeVideo()} />
         <Button
           onPress={() => {
-            isVideo ? callnav() : null;
+            isVideo ? callnav() : showAlert();
           }}
           title="continue"
           style={{

@@ -45,7 +45,7 @@ const Home = ({ navigation }) => {
             marginBottom: 8,
           }}
         >
-          Calculate your family vitals!
+          Vitals measurements at your fingertips!
         </Text>
         <View style={{}}>
           <TouchableOpacity onPress={() => navigation.navigate("Login")}>

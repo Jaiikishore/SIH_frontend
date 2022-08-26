@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Button, Text, Alert, ActivityIndicator } from "react-native";
 
 import * as ScreenOrientation from "expo-screen-orientation";
-const Prediction = ({ route }) => {
+const Prediction = ({ navigation, route }) => {
   const { singleFile } = route.params;
   // const [isLoading, setLoading] = useState(true);
   const [heartdata, setHeartData] = useState(null);
@@ -19,9 +19,10 @@ const Prediction = ({ route }) => {
       .catch((error) => console.log("fetchToken error: ", error));
   }, []); */
   const showAlert = () => {
-    Alert.alert("Face not detected", [
-      { text: "OK", onPress: () => console.log("OK Pressed") },
+    Alert.alert("FACE NOT DETECTED:", "Show Face to Measure Vitals", [
+      { text: "OK" },
     ]);
+    navigation.navigate("Landing");
   };
 
   const sendVideo = async () => {
@@ -35,8 +36,9 @@ const Prediction = ({ route }) => {
         uri: fileToUpload.uri,
         type: "video/mp4",
       });
+      let response = null;
       // let response = await fetch("http://192.168.43.37:8080/upload", {
-      let response = await fetch("http://192.168.159.37:8080/upload", {
+      response = await fetch("http://192.168.159.37:8080/upload", {
         //chan
         // let response = await fetch("http://192.168.30.37:8080/upload", {
         //raks
@@ -47,21 +49,19 @@ const Prediction = ({ route }) => {
         },
       });
       const json1 = await response.json();
-      console.log(json1);
+      // console.log(response);
       setHeartData(Number(json1.heartrate.toFixed(1)));
     } catch (error) {
-      console.log(error);
-      // showAlert();
+      // console.log(error);
+      showAlert();
     } finally {
       setIsLoading(false);
     }
-    /* setLoading(false);
-   } */
   };
 
   useEffect(() => {
-    setIsLoading(true);
     ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
+    setIsLoading(true);
     sendVideo();
   }, []);
 

@@ -4,6 +4,7 @@ import Home from "../screen/Home";
 import Camera from "../screen/Camera";
 import Login from "../screen/login";
 import Prediction from "../screen/Prediction";
+import Landing from "../screen/Landing";
 
 const screens = {
   Home: {
@@ -16,6 +17,12 @@ const screens = {
     screen: Login,
     navigationOptions: {
       title: "Login",
+    },
+  },
+  Landing: {
+    screen: Landing,
+    navigationOptions: {
+      title: "Landing",
     },
   },
   Camera: {
